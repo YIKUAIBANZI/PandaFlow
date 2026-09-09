@@ -1,0 +1,39 @@
+{
+  "classification": "demo",
+  "scenarios": [
+    {
+      "id": "normal_all_skills",
+      "title": "常规游览、失物咨询、科普和复盘",
+      "request": {
+        "visit_date": "2026-07-04", "temperature_celsius": 26, "crowd_level": "low",
+        "incident": {"description": "手机遗失", "area": "north_gate", "is_ongoing": false},
+        "knowledge": {"question": "大熊猫主要吃什么？", "language": "zh"}
+      }
+    },
+    {
+      "id": "heat_replan",
+      "title": "合成高温触发避开竹林并复盘",
+      "request": {
+        "visit_date": "2026-07-04", "temperature_celsius": 33, "crowd_level": "high",
+        "must_see": ["panda_nursery", "bamboo_grove"]
+      }
+    },
+    {
+      "id": "human_escalation",
+      "title": "走失事件阻断普通规划并转人工",
+      "request": {
+        "visit_date": "2026-07-04", "temperature_celsius": 26, "crowd_level": "low",
+        "incident": {"description": "儿童走失", "area": "north_gate", "is_ongoing": true}
+      }
+    },
+    {
+      "id": "live_current_weather",
+      "title": "当天实时天气，可断网降级为固定高温演示快照",
+      "requires_current_visit_date": true,
+      "request": {
+        "visit_date": "2026-09-08", "weather_mode": "live_current", "crowd_level": "high",
+        "must_see": ["panda_nursery", "bamboo_grove"]
+      }
+    }
+  ]
+}

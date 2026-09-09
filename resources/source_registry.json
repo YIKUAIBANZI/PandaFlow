@@ -1,0 +1,90 @@
+{
+  "sources": [
+    {
+      "source_id": "source_open_meteo_forecast",
+      "title": "Open-Meteo Weather Forecast API documentation",
+      "publisher": "Open-Meteo",
+      "url": "https://open-meteo.com/en/docs",
+      "accessed_on": "2026-09-08",
+      "classification": "public",
+      "summary": "Official endpoint, current-variable, unit, timezone, response and error documentation for the live weather adapter.",
+      "applies_to": ["welfare-risk-dispatcher", "pandaflow-demo-orchestrator"]
+    },
+    {
+      "source_id": "source_open_meteo_license",
+      "title": "Open-Meteo licence and attribution requirements",
+      "publisher": "Open-Meteo",
+      "url": "https://open-meteo.com/en/license",
+      "accessed_on": "2026-09-08",
+      "classification": "public",
+      "summary": "Open-Meteo data are offered under CC BY 4.0 and displayed data require nearby attribution.",
+      "applies_to": ["welfare-risk-dispatcher", "pandaflow-demo-orchestrator"]
+    },
+    {
+      "source_id": "source_demo_weather_fallback",
+      "title": "PandaFlow synthetic weather input and fixed fallback",
+      "publisher": "PandaFlow prototype",
+      "url": "https://example.invalid/pandaflow/demo-weather",
+      "accessed_on": "2026-09-08",
+      "classification": "demo",
+      "summary": "Synthetic supplied weather and a fixed conservative high-temperature fallback for deterministic offline demonstrations; not a venue observation.",
+      "applies_to": ["welfare-risk-dispatcher", "pandaflow-demo-orchestrator"]
+    },
+    {
+      "source_id": "source_demo_incident_rules",
+      "title": "PandaFlow synthetic incident routing matrix",
+      "publisher": "PandaFlow prototype",
+      "url": "https://example.invalid/pandaflow/demo-incident-rules",
+      "accessed_on": "2026-09-06",
+      "classification": "demo",
+      "summary": "Synthetic six-category priority and human-routing rules; not an official venue or clinical protocol.",
+      "applies_to": ["incident-triage-dispatch"]
+    },
+    {
+      "source_id": "source_demo_review_rules",
+      "title": "PandaFlow descriptive execution review rules",
+      "publisher": "PandaFlow prototype",
+      "url": "https://example.invalid/pandaflow/demo-review-rules",
+      "accessed_on": "2026-09-06",
+      "classification": "demo",
+      "summary": "Demo metadata aggregation and evidence-backed observations; does not establish operational effects or causal relationships.",
+      "applies_to": ["operations-review"]
+    },
+    {
+      "source_id": "source_base_visitor_service",
+      "title": "Chengdu Research Base Visitor Service",
+      "publisher": "Chengdu Research Base of Giant Panda Breeding",
+      "url": "https://m.panda.org.cn/cn/service/",
+      "accessed_on": "2026-09-04",
+      "summary": "Public visitor-service information including reservation and visit guidance.",
+      "applies_to": ["visitor-policy-check"]
+    },
+    {
+      "source_id": "source_demo_park_graph",
+      "title": "PandaFlow synthetic park graph",
+      "publisher": "PandaFlow prototype",
+      "url": "https://example.invalid/pandaflow/demo-park-graph",
+      "accessed_on": "2026-09-05",
+      "summary": "Synthetic navigation data for the competition demo; not an actual park map or operating status.",
+      "applies_to": ["accessible-itinerary-planner"]
+    },
+    {
+      "source_id": "source_demo_welfare_rules",
+      "title": "PandaFlow synthetic welfare risk rules",
+      "publisher": "PandaFlow prototype",
+      "url": "https://example.invalid/pandaflow/demo-welfare-rules",
+      "accessed_on": "2026-09-05",
+      "summary": "Synthetic threshold and outdoor-area data for the competition demo; not an operational animal welfare decision.",
+      "applies_to": ["welfare-risk-dispatcher"]
+    },
+    {
+      "source_id": "source_demo_knowledge_card",
+      "title": "PandaFlow demo knowledge card",
+      "publisher": "PandaFlow prototype",
+      "url": "https://example.invalid/pandaflow/demo-knowledge-card",
+      "accessed_on": "2026-09-05",
+      "summary": "Demo-only fact card for source-bound retrieval testing.",
+      "applies_to": ["panda-knowledge-guard"]
+    }
+  ]
+}

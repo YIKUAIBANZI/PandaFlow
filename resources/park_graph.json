@@ -1,0 +1,25 @@
+{
+  "classification": "demo",
+  "source_refs": ["source_demo_park_graph"],
+  "nodes": {
+    "north_gate": {"dwell_minutes": 0, "step_free": true, "rest_stop": false},
+    "panda_nursery": {"dwell_minutes": 35, "step_free": true, "rest_stop": false},
+    "science_hall": {"dwell_minutes": 20, "step_free": true, "rest_stop": true},
+    "bamboo_grove": {"dwell_minutes": 20, "step_free": true, "rest_stop": false},
+    "hillside_trail": {"dwell_minutes": 20, "step_free": false, "rest_stop": false},
+    "lake_pavilion": {"dwell_minutes": 15, "step_free": true, "rest_stop": true},
+    "south_gate": {"dwell_minutes": 0, "step_free": true, "rest_stop": false}
+  },
+  "edges": [
+    ["north_gate", "panda_nursery", 12],
+    ["north_gate", "science_hall", 10],
+    ["panda_nursery", "science_hall", 8],
+    ["panda_nursery", "bamboo_grove", 10],
+    ["science_hall", "lake_pavilion", 12],
+    ["lake_pavilion", "bamboo_grove", 8],
+    ["north_gate", "hillside_trail", 8],
+    ["hillside_trail", "bamboo_grove", 6],
+    ["bamboo_grove", "south_gate", 15],
+    ["lake_pavilion", "south_gate", 18]
+  ]
+}

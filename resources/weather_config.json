@@ -1,0 +1,16 @@
+{
+  "classification": "demo",
+  "location": {
+    "label": "Chengdu Panda Base demo weather point",
+    "latitude": 30.74,
+    "longitude": 104.15,
+    "demo_data": true
+  },
+  "fallback": {
+    "temperature_celsius": 33,
+    "apparent_temperature_celsius": 36,
+    "precipitation_mm": 0,
+    "weather_code": 1,
+    "wind_speed_kmh": 8
+  }
+}

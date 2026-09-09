@@ -1,0 +1,12 @@
+{
+  "classification": "demo",
+  "cards": [
+    {
+      "card_id": "card_diet",
+      "keywords": ["吃什么", "食物", "竹"],
+      "answer_zh": "大熊猫以竹类为主食；本原型只依据已登记科普卡回答。",
+      "answer_en": "Giant pandas mainly eat bamboo; this prototype answers only from registered knowledge cards.",
+      "source_ref": "source_demo_knowledge_card"
+    }
+  ]
+}

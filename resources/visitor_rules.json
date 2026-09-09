@@ -1,0 +1,10 @@
+{
+  "rule_version": "2026-09-05-demo.1",
+  "classification": "demo",
+  "source_refs": ["source_base_visitor_service"],
+  "known_document_types": ["passport", "mainland_id", "resident_permit"],
+  "rules": {
+    "reservation": "rule_reservation_required",
+    "document": "rule_document_check"
+  }
+}

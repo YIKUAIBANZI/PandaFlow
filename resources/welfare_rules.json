@@ -1,0 +1,6 @@
+{
+  "classification": "demo",
+  "source_refs": ["source_demo_welfare_rules"],
+  "high_heat_celsius": 30,
+  "outdoor_nodes": ["bamboo_grove", "lake_pavilion"]
+}

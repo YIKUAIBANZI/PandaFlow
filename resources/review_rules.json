@@ -1,0 +1,12 @@
+{
+  "version": "demo-2026-09-06",
+  "classification": "demo",
+  "rule_id": "review_descriptive_metadata",
+  "source_refs": ["source_demo_review_rules"],
+  "status_actions": {
+    "degraded": "检查这些调用的数据或依赖降级原因。",
+    "escalated": "请人工核实这些事件是否已实际接手；升级状态不能证明已通知或已解决。",
+    "rejected": "检查被拒绝请求的输入条件与规则边界。",
+    "needs_input": "检查哪些必填信息需要在入口补充。"
+  }
+}
