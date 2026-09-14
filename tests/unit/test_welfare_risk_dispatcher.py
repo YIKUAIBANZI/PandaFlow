@@ -38,6 +38,32 @@ def test_closed_route_node_requests_replanning_at_normal_temperature():
     assert result.data["avoid_nodes"] == ["bamboo_grove"]
 
 
+def test_closure_and_high_heat_constraints_are_merged():
+    result = dispatch_risk(
+        RiskDispatchRequest(
+            temperature_celsius=33,
+            crowd_level="high",
+            route_nodes=["science_hall", "bamboo_grove"],
+            closed_nodes=["science_hall"],
+        )
+    )
+
+    assert result.data["avoid_nodes"] == ["bamboo_grove", "science_hall"]
+    assert result.data["active_avoid_nodes"] == [
+        "bamboo_grove",
+        "lake_pavilion",
+        "science_hall",
+    ]
+    assert result.data["reasons"] == [
+        "A demo route area is marked closed.",
+        "Temperature meets the demo high-heat threshold for outdoor route areas.",
+    ]
+    assert result.rule_refs == [
+        "rule_demo_area_closure",
+        "rule_demo_high_heat_outdoor",
+    ]
+
+
 def test_normal_conditions_keep_the_existing_route():
     result = dispatch_risk(
         RiskDispatchRequest(

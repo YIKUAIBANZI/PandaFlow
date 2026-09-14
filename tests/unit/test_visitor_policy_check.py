@@ -30,6 +30,20 @@ def test_unconfirmed_reservation_does_not_promise_entry():
     assert "booking" in result.next_actions[0].lower()
 
 
+def test_missing_entry_slot_does_not_return_an_executable_policy_result():
+    result = evaluate_policy(
+        VisitorPolicyRequest(
+            visit_date=date(2026, 7, 4),
+            reservation_status="confirmed",
+            document_type="passport",
+        )
+    )
+
+    assert result.status is SkillStatus.NEEDS_INPUT
+    assert result.data == {"eligible": None, "missing_fields": ["entry_slot"]}
+    assert result.next_actions == ["Provide the intended entry slot."]
+
+
 def test_unknown_document_type_is_escalated_for_human_verification():
     result = evaluate_policy(
         VisitorPolicyRequest(

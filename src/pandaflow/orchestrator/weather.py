@@ -1,7 +1,7 @@
 """Resolve supplied, live, and fallback weather without changing rule logic."""
 
 from collections.abc import Callable
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from typing import Literal
 from zoneinfo import ZoneInfo
 
@@ -44,6 +44,7 @@ def _demo_snapshot(source: Literal["provided_synthetic", "fixed_fallback"], temp
         weather_code=fallback["weather_code"],
         wind_speed_kmh=fallback["wind_speed_kmh"],
         observed_at=None,
+        fetched_at=None,
         timezone="Asia/Shanghai",
         location_label=config["location"]["label"],
         source=source,
@@ -94,6 +95,30 @@ def resolve_weather(
         snapshot = (fetcher or fetch_open_meteo_current)()
     except OpenMeteoError:
         return _fallback("Live weather was unavailable or invalid; fixed demo weather was used.")
+    config = load_json_resource("weather_config.json")
+    freshness = config["freshness"]
+    observed_at = snapshot.observed_at
+    if observed_at is None:
+        return _fallback(
+            "Live weather observation was stale or had invalid time metadata; fixed demo weather was used."
+        )
+    if observed_at.tzinfo is None:
+        observed_at = observed_at.replace(tzinfo=SHANGHAI_TIMEZONE)
+    else:
+        observed_at = observed_at.astimezone(SHANGHAI_TIMEZONE)
+    observation_age = current_time.astimezone(SHANGHAI_TIMEZONE) - observed_at
+    max_age = timedelta(minutes=freshness["max_observation_age_minutes"])
+    max_future_skew = timedelta(minutes=freshness["max_future_skew_minutes"])
+    if observation_age > max_age or observation_age < -max_future_skew:
+        return _fallback(
+            "Live weather observation was stale or had invalid time metadata; fixed demo weather was used."
+        )
+    snapshot = snapshot.model_copy(
+        update={
+            "observed_at": observed_at,
+            "fetched_at": current_time.astimezone(SHANGHAI_TIMEZONE),
+        }
+    )
     return WeatherResolution(
         status=SkillStatus.OK,
         snapshot=snapshot,

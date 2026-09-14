@@ -22,7 +22,7 @@ from pandaflow.shared.rules import load_json_resource
 SHANGHAI_NOW = datetime(2026, 9, 8, 12, tzinfo=ZoneInfo("Asia/Shanghai"))
 
 
-def _live_payload() -> bytes:
+def _live_payload(*, observed_at: str = "2026-09-08T12:00") -> bytes:
     return json.dumps(
         {
             "latitude": 30.75,
@@ -38,7 +38,7 @@ def _live_payload() -> bytes:
                 "wind_speed_10m": "km/h",
             },
             "current": {
-                "time": "2026-09-08T12:00",
+                "time": observed_at,
                 "interval": 900,
                 "temperature_2m": 33.1,
                 "apparent_temperature": 36.2,
@@ -214,13 +214,80 @@ def test_today_is_evaluated_in_shanghai_even_when_the_server_clock_is_utc():
         temperature_celsius=None,
         visit_date=date(2026, 9, 8),
         fetcher=lambda: fetch_open_meteo_current(
-            transport=lambda _url, _timeout: _live_payload()
+            transport=lambda _url, _timeout: _live_payload(
+                observed_at="2026-09-08T00:30"
+            )
         ),
         now=lambda: utc_time_after_shanghai_midnight,
     )
 
     assert resolution.status is SkillStatus.OK
     assert resolution.snapshot.source == "open_meteo"
+
+
+@pytest.mark.parametrize(
+    ("observed_at", "expected_status", "expected_source"),
+    [
+        (SHANGHAI_NOW - timedelta(minutes=30), SkillStatus.OK, "open_meteo"),
+        (
+            SHANGHAI_NOW - timedelta(minutes=30, seconds=1),
+            SkillStatus.DEGRADED,
+            "fixed_fallback",
+        ),
+        (SHANGHAI_NOW + timedelta(minutes=5), SkillStatus.OK, "open_meteo"),
+        (
+            SHANGHAI_NOW + timedelta(minutes=5, seconds=1),
+            SkillStatus.DEGRADED,
+            "fixed_fallback",
+        ),
+    ],
+)
+def test_live_observation_freshness_boundaries(
+    observed_at, expected_status, expected_source
+):
+    snapshot = fetch_open_meteo_current(
+        transport=lambda _url, _timeout: _live_payload(
+            observed_at=observed_at.strftime("%Y-%m-%dT%H:%M:%S")
+        )
+    )
+
+    resolution = resolve_weather(
+        mode="live_current",
+        temperature_celsius=None,
+        visit_date=SHANGHAI_NOW.date(),
+        fetcher=lambda: snapshot,
+        now=lambda: SHANGHAI_NOW,
+    )
+
+    assert resolution.status is expected_status
+    assert resolution.snapshot.source == expected_source
+    if expected_status is SkillStatus.OK:
+        assert resolution.snapshot.observed_at == observed_at
+        assert resolution.snapshot.fetched_at == SHANGHAI_NOW
+    else:
+        assert any("stale" in warning.lower() for warning in resolution.warnings)
+
+
+def test_freshness_accepts_an_observation_from_before_shanghai_midnight():
+    now = datetime(2026, 9, 9, 0, 5, tzinfo=ZoneInfo("Asia/Shanghai"))
+    observed_at = datetime(2026, 9, 8, 23, 50, tzinfo=ZoneInfo("Asia/Shanghai"))
+    snapshot = fetch_open_meteo_current(
+        transport=lambda _url, _timeout: _live_payload(
+            observed_at="2026-09-08T23:50"
+        )
+    )
+
+    resolution = resolve_weather(
+        mode="live_current",
+        temperature_celsius=None,
+        visit_date=now.date(),
+        fetcher=lambda: snapshot,
+        now=lambda: now,
+    )
+
+    assert resolution.status is SkillStatus.OK
+    assert resolution.snapshot.observed_at == observed_at
+    assert resolution.snapshot.fetched_at == now
 
 
 @pytest.mark.parametrize(

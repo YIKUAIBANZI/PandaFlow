@@ -1,0 +1,28 @@
+[Unit]
+Description=PandaFlow visitor and welfare demo API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pandaflow
+Group=pandaflow
+WorkingDirectory=/opt/pandaflow/current
+Environment=PYTHONDONTWRITEBYTECODE=1
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/opt/pandaflow/current/venv/bin/python -m uvicorn pandaflow.api.app:app --host 127.0.0.1 --port 8010 --proxy-headers --forwarded-allow-ips 127.0.0.1 --no-access-log --limit-concurrency 32 --timeout-keep-alive 5
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+MemoryMax=512M
+TasksMax=64
+UMask=0077
+
+[Install]
+WantedBy=multi-user.target

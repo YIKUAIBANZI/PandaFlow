@@ -49,6 +49,38 @@ def test_danger_overrides_low_risk_hint_missing_area_and_claimed_resolution():
     assert "area" in body["data"]["missing_fields"]
 
 
+@pytest.mark.parametrize(
+    ("description", "category", "priority"),
+    [
+        ("有人晕倒了，顺便问一下门票怎么退", "medical", "P1"),
+        ("孩子找不到了，想问门票退款", "missing_person", "P1"),
+        ("a visitor collapsed and needs a refund", "medical", "P1"),
+        ("my child cannot be found; I also need a ticket refund", "missing_person", "P1"),
+    ],
+)
+def test_mixed_safety_and_ticketing_intents_always_escalate(
+    description, category, priority
+):
+    body = post_incident(
+        {"description": description, "area": "north_gate", "is_ongoing": True}
+    ).json()
+
+    assert body["status"] == "escalated"
+    assert body["data"]["category"] == category
+    assert body["data"]["priority"] == priority
+    assert body["data"]["safety_signals"]
+
+
+def test_routine_ticketing_has_no_safety_signal():
+    body = post_incident(
+        {"description": "请问门票怎么退款", "area": "north_gate", "is_ongoing": False}
+    ).json()
+
+    assert body["status"] == "ok"
+    assert body["data"]["category"] == "ticketing"
+    assert body["data"]["safety_signals"] == []
+
+
 @pytest.mark.parametrize("payload", [{}, {"description": "请问一下"}])
 def test_insufficient_input_requests_details_without_inventing_category(payload):
     response = post_incident(payload)

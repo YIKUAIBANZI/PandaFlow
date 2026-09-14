@@ -25,3 +25,7 @@ testpaths = ["tests"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/pandaflow"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"resources" = "pandaflow/resources"
+"skills" = "pandaflow/skill_docs"

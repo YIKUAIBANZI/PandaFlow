@@ -5,20 +5,26 @@
       "title": "Open-Meteo Weather Forecast API documentation",
       "publisher": "Open-Meteo",
       "url": "https://open-meteo.com/en/docs",
-      "accessed_on": "2026-09-08",
+      "accessed_on": "2026-09-14",
       "classification": "public",
-      "summary": "Official endpoint, current-variable, unit, timezone, response and error documentation for the live weather adapter.",
-      "applies_to": ["welfare-risk-dispatcher", "pandaflow-demo-orchestrator"]
+      "summary": "Official endpoint, current-variable, unit, timezone, response and error documentation. Current conditions are based on 15-minutely weather model data; PandaFlow applies a conservative 30-minute age and 5-minute future-skew acceptance window.",
+      "applies_to": [
+        "welfare-risk-dispatcher",
+        "pandaflow-demo-orchestrator"
+      ]
     },
     {
       "source_id": "source_open_meteo_license",
-      "title": "Open-Meteo licence and attribution requirements",
+      "title": "Open-Meteo terms, service limits and attribution requirements",
       "publisher": "Open-Meteo",
-      "url": "https://open-meteo.com/en/license",
-      "accessed_on": "2026-09-08",
+      "url": "https://open-meteo.com/en/terms",
+      "accessed_on": "2026-09-14",
       "classification": "public",
       "summary": "Open-Meteo data are offered under CC BY 4.0 and displayed data require nearby attribution.",
-      "applies_to": ["welfare-risk-dispatcher", "pandaflow-demo-orchestrator"]
+      "applies_to": [
+        "welfare-risk-dispatcher",
+        "pandaflow-demo-orchestrator"
+      ]
     },
     {
       "source_id": "source_demo_weather_fallback",
@@ -28,7 +34,10 @@
       "accessed_on": "2026-09-08",
       "classification": "demo",
       "summary": "Synthetic supplied weather and a fixed conservative high-temperature fallback for deterministic offline demonstrations; not a venue observation.",
-      "applies_to": ["welfare-risk-dispatcher", "pandaflow-demo-orchestrator"]
+      "applies_to": [
+        "welfare-risk-dispatcher",
+        "pandaflow-demo-orchestrator"
+      ]
     },
     {
       "source_id": "source_demo_incident_rules",
@@ -38,7 +47,9 @@
       "accessed_on": "2026-09-06",
       "classification": "demo",
       "summary": "Synthetic six-category priority and human-routing rules; not an official venue or clinical protocol.",
-      "applies_to": ["incident-triage-dispatch"]
+      "applies_to": [
+        "incident-triage-dispatch"
+      ]
     },
     {
       "source_id": "source_demo_review_rules",
@@ -48,7 +59,9 @@
       "accessed_on": "2026-09-06",
       "classification": "demo",
       "summary": "Demo metadata aggregation and evidence-backed observations; does not establish operational effects or causal relationships.",
-      "applies_to": ["operations-review"]
+      "applies_to": [
+        "operations-review"
+      ]
     },
     {
       "source_id": "source_base_visitor_service",
@@ -57,7 +70,9 @@
       "url": "https://m.panda.org.cn/cn/service/",
       "accessed_on": "2026-09-04",
       "summary": "Public visitor-service information including reservation and visit guidance.",
-      "applies_to": ["visitor-policy-check"]
+      "applies_to": [
+        "visitor-policy-check"
+      ]
     },
     {
       "source_id": "source_demo_park_graph",
@@ -66,7 +81,10 @@
       "url": "https://example.invalid/pandaflow/demo-park-graph",
       "accessed_on": "2026-09-05",
       "summary": "Synthetic navigation data for the competition demo; not an actual park map or operating status.",
-      "applies_to": ["accessible-itinerary-planner"]
+      "applies_to": [
+        "accessible-itinerary-planner"
+      ],
+      "classification": "demo"
     },
     {
       "source_id": "source_demo_welfare_rules",
@@ -75,16 +93,59 @@
       "url": "https://example.invalid/pandaflow/demo-welfare-rules",
       "accessed_on": "2026-09-05",
       "summary": "Synthetic threshold and outdoor-area data for the competition demo; not an operational animal welfare decision.",
-      "applies_to": ["welfare-risk-dispatcher"]
+      "applies_to": [
+        "welfare-risk-dispatcher"
+      ],
+      "classification": "demo"
     },
     {
-      "source_id": "source_demo_knowledge_card",
-      "title": "PandaFlow demo knowledge card",
-      "publisher": "PandaFlow prototype",
-      "url": "https://example.invalid/pandaflow/demo-knowledge-card",
-      "accessed_on": "2026-09-05",
-      "summary": "Demo-only fact card for source-bound retrieval testing.",
-      "applies_to": ["panda-knowledge-guard"]
+      "source_id": "source_panda_base_diet",
+      "title": "Panda Knowledge: Feeding",
+      "publisher": "Chengdu Research Base of Giant Panda Breeding",
+      "url": "https://www.panda.org.cn/yd/education/database/kpzs/2025-06-05/8786.html",
+      "accessed_on": "2026-09-14",
+      "classification": "public",
+      "summary": "Official species-level facts: a bamboo-based diet, a pseudo-thumb used to grip bamboo, and low bamboo digestion efficiency associated with extensive feeding. These facts do not establish live individual location or health.",
+      "applies_to": [
+        "panda-knowledge-guard"
+      ]
+    },
+    {
+      "source_id": "source_base_visitor_notice",
+      "title": "成都大熊猫繁育研究基地：游客须知",
+      "publisher": "Chengdu Research Base of Giant Panda Breeding",
+      "url": "https://m.panda.org.cn/cn/service/notice/",
+      "accessed_on": "2026-09-14",
+      "classification": "public",
+      "summary": "Public context for temporary closures, heat-management factors and assisted visitor needs. Does not establish PandaFlow synthetic node status, temperature thresholds or routing matrix.",
+      "applies_to": [
+        "welfare-risk-dispatcher",
+        "accessible-itinerary-planner"
+      ]
+    },
+    {
+      "source_id": "source_base_ticket_en",
+      "title": "Chengdu Research Base: Tickets",
+      "publisher": "Chengdu Research Base of Giant Panda Breeding",
+      "url": "https://www.panda.org.cn/en/service/ticket/",
+      "accessed_on": "2026-09-14",
+      "classification": "public",
+      "summary": "Official reservation, time-slot and document information, including age/height exemptions. PandaFlow only checks demo story fields; it does not implement full eligibility or identity verification.",
+      "applies_to": [
+        "visitor-policy-check"
+      ]
+    },
+    {
+      "source_id": "source_base_opening_hours",
+      "title": "成都大熊猫繁育研究基地：开放时间",
+      "publisher": "Chengdu Research Base of Giant Panda Breeding",
+      "url": "https://www.panda.org.cn/cn/service/opentime/",
+      "accessed_on": "2026-09-14",
+      "classification": "public",
+      "summary": "Seasonal opening and clearance times, with separate tower rules. Context only: seasonal opening and exit-time rules are not implemented by PandaFlow.",
+      "applies_to": [
+        "visitor-policy-check"
+      ]
     }
   ]
 }

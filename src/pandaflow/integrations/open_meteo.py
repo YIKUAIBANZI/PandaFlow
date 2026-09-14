@@ -46,6 +46,7 @@ class WeatherSnapshot(BaseModel):
     weather_code: int = Field(ge=0, le=99)
     wind_speed_kmh: float = Field(ge=0, le=500)
     observed_at: datetime | None
+    fetched_at: datetime | None = None
     timezone: str
     location_label: str
     source: Literal["open_meteo", "provided_synthetic", "fixed_fallback"]

@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#173d2a">
+    <meta name="description" content="PandaFlow 熊猫守望：安全优先的六 Skill 游览协同演示。">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='16' cy='15' r='12' fill='%2317231c'/%3E%3Ccircle cx='48' cy='15' r='12' fill='%2317231c'/%3E%3Ccircle cx='32' cy='35' r='27' fill='%23fffdf7' stroke='%2317231c' stroke-width='4'/%3E%3Cellipse cx='22' cy='32' rx='7' ry='9' fill='%2317231c' transform='rotate(18 22 32)'/%3E%3Cellipse cx='42' cy='32' rx='7' ry='9' fill='%2317231c' transform='rotate(-18 42 32)'/%3E%3C/svg%3E">
+    <title>PandaFlow 熊猫守望</title>
+    <link rel="stylesheet" href="/demo/assets/styles.css">
+  </head>
+  <body>
+    <a class="skip-link" href="#scenario-list">跳到演示场景</a>
+
+    <header class="hero">
+      <div class="brand-lockup">
+        <div class="panda-mark" aria-hidden="true">
+          <span></span><span></span><i></i>
+        </div>
+        <div>
+          <p class="brand-name">PandaFlow 熊猫守望</p>
+          <p class="brand-note">面向高峰游览的安全、动物福利与无障碍协同</p>
+        </div>
+      </div>
+      <div class="truth-labels" aria-label="演示边界">
+        <span>Prototype</span>
+        <span>Demo Data</span>
+        <span>No Real Dispatch</span>
+      </div>
+      <div class="hero-copy">
+        <h1>一次点击，看清六个 Skill<br>如何守住一条安全路线</h1>
+        <p>固定亲子与老人同行故事线。天气变化、园区规则或现场事件发生时，系统先处理更重要的事。</p>
+        <button id="start-demo" class="quiet-action" type="button">开始演示</button>
+      </div>
+      <ol class="priority-track" aria-label="PandaFlow 决策优先级">
+        <li><strong>人身安全</strong><span>最高优先级</span></li>
+        <li><strong>动物福利与园区规则</strong><span>硬约束</span></li>
+        <li><strong>无障碍</strong><span>全程保留</span></li>
+        <li><strong>游览偏好</strong><span>条件允许时满足</span></li>
+      </ol>
+    </header>
+
+    <main class="demo-shell">
+      <nav class="scenario-panel" aria-labelledby="scenario-heading">
+        <div class="section-heading">
+          <p>场景卷宗</p>
+          <h2 id="scenario-heading">选择一个变化</h2>
+        </div>
+        <p id="catalog-status" class="panel-note" aria-live="polite">正在加载四个固定演示场景……</p>
+        <div id="scenario-list" class="scenario-list" aria-label="演示场景"></div>
+        <button id="run-scenario" class="run-action" type="button" disabled>运行所选场景</button>
+        <p class="run-note">切换场景不会自动请求。实时天气仅在主动运行时访问后端。</p>
+      </nav>
+
+      <section id="decision-result" class="decision-panel" aria-labelledby="decision-heading" aria-live="polite" aria-busy="false">
+        <div class="section-heading">
+          <p>决策主展台</p>
+          <h2 id="decision-heading">系统会先守住什么？</h2>
+        </div>
+
+        <div id="result-empty" class="empty-state">
+          <div class="route-seed" aria-hidden="true"><span></span><span></span><span></span></div>
+          <p>选择左侧场景并运行。这里将展示路线变化、人工升级和天气来源。</p>
+        </div>
+
+        <div id="result-content" hidden>
+          <div id="status-banner" class="status-banner" data-tone="unknown">
+            <span id="status-symbol" class="status-symbol" aria-hidden="true">○</span>
+            <div>
+              <p id="status-label">未知状态</p>
+              <span id="status-code">unknown</span>
+            </div>
+          </div>
+          <h3 id="result-headline" class="result-headline"></h3>
+          <p id="scenario-caption" class="scenario-caption"></p>
+          <p id="scope-note" class="panel-note"></p>
+
+          <section id="route-section" class="result-section" aria-labelledby="route-heading">
+            <div class="result-section-heading">
+              <h3 id="route-heading">路线变化</h3>
+              <span id="route-verdict" class="section-verdict"></span>
+            </div>
+            <div class="route-columns">
+              <div>
+                <h4>初始路线</h4>
+                <p id="initial-route-summary" class="panel-note"></p>
+                <ol id="initial-route" class="route-list"></ol>
+              </div>
+              <div>
+                <h4>最终路线</h4>
+                <p id="final-route-summary" class="panel-note"></p>
+                <ol id="final-route" class="route-list route-list-final"></ol>
+              </div>
+            </div>
+            <div id="removed-route" class="removed-route" hidden>
+              <p>为安全已避开</p>
+              <ul id="removed-node-list"></ul>
+            </div>
+          </section>
+
+          <div class="detail-grid">
+            <section id="weather-section" class="result-section detail-card" aria-labelledby="weather-heading" hidden>
+              <div class="result-section-heading">
+                <h3 id="weather-heading">天气依据</h3>
+                <span id="weather-kind" class="section-verdict"></span>
+              </div>
+              <dl id="weather-facts" class="fact-grid"></dl>
+              <p id="weather-attribution" class="attribution"></p>
+            </section>
+
+            <section id="incident-section" class="result-section detail-card" aria-labelledby="incident-heading" hidden>
+              <div class="result-section-heading">
+                <h3 id="incident-heading">现场事件</h3>
+                <span id="incident-priority" class="section-verdict"></span>
+              </div>
+              <dl id="incident-facts" class="fact-grid"></dl>
+              <h4>立即动作</h4>
+              <ul id="incident-actions"></ul>
+              <p class="privacy-note">不展示事件原文；处置结果仅为未发送草稿。</p>
+            </section>
+
+            <section id="knowledge-section" class="result-section detail-card" aria-labelledby="knowledge-heading" hidden>
+              <div class="result-section-heading">
+                <h3 id="knowledge-heading">科普回答</h3>
+                <span id="knowledge-status" class="section-verdict"></span>
+              </div>
+              <p id="knowledge-answer" class="knowledge-answer"></p>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <aside id="execution-evidence" class="evidence-panel" aria-labelledby="evidence-heading">
+        <div class="section-heading">
+          <p>证据标本柜</p>
+          <h2 id="evidence-heading">每一步都可追溯</h2>
+        </div>
+        <p id="evidence-empty" class="panel-note">场景运行后，这里会显示真实调用顺序、规则与来源。</p>
+        <div id="evidence-content" hidden>
+          <section aria-labelledby="timeline-heading">
+            <h3 id="timeline-heading">Skill 调用链</h3>
+            <ol id="timeline-list" class="timeline-list"></ol>
+          </section>
+          <section aria-labelledby="review-heading">
+            <h3 id="review-heading">运营复盘</h3>
+            <div id="review-summary" class="review-summary"></div>
+          </section>
+          <section aria-labelledby="refs-heading">
+            <h3 id="refs-heading">规则、来源与提示</h3>
+            <ul id="evidence-list" class="evidence-list"></ul>
+          </section>
+          <details class="raw-details">
+            <summary>查看技术 JSON</summary>
+            <pre id="raw-json"></pre>
+          </details>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <p><strong>演示边界：</strong>合成园区图与规则，不代表成都大熊猫繁育研究基地官方制度、实时动物状态或合作关系。</p>
+      <p>高风险事件只生成转人工建议，系统不会发送工单、诊断或确认事件已解决。</p>
+    </footer>
+
+    <script type="module" src="/demo/assets/app.js"></script>
+  </body>
+</html>

@@ -1,12 +1,71 @@
 {
-  "classification": "demo",
+  "classification": "public",
+  "unsupported_live_patterns": [
+    "今天哪只",
+    "今天竹林",
+    "现在哪",
+    "实时位置",
+    "当前状态",
+    "which giant panda",
+    "where is the panda",
+    "where are the pandas",
+    "today",
+    "right now",
+    "current location",
+    "current status"
+  ],
   "cards": [
     {
       "card_id": "card_diet",
-      "keywords": ["吃什么", "食物", "竹"],
-      "answer_zh": "大熊猫以竹类为主食；本原型只依据已登记科普卡回答。",
-      "answer_en": "Giant pandas mainly eat bamboo; this prototype answers only from registered knowledge cards.",
-      "source_ref": "source_demo_knowledge_card"
+      "question_patterns_zh": [
+        "吃什么",
+        "主要食物",
+        "以什么为食",
+        "食物是什么",
+        "竹子为主食"
+      ],
+      "question_patterns_en": [
+        "what do giant pandas eat",
+        "what does a giant panda eat",
+        "giant panda diet",
+        "pandas eat bamboo",
+        "panda food"
+      ],
+      "answer_zh": "大熊猫以高纤维竹类为主食；本原型只依据已登记科普卡回答。",
+      "answer_en": "Giant pandas mainly eat high-fibre bamboo; this prototype answers only from registered knowledge cards.",
+      "source_ref": "source_panda_base_diet"
+    },
+    {
+      "card_id": "card_pseudo_thumb",
+      "question_patterns_zh": [
+        "大熊猫为什么有伪拇指",
+        "大熊猫如何握住竹子",
+        "大熊猫的伪拇指有什么用"
+      ],
+      "question_patterns_en": [
+        "how do giant pandas grip bamboo",
+        "what is a giant panda pseudo-thumb",
+        "what is a panda's pseudo-thumb for"
+      ],
+      "answer_zh": "大熊猫前爪的伪拇指与其他趾组成对握结构，便于握竹；这是物种层面的科普，不代表任何个体的当前状态。",
+      "answer_en": "A giant panda's pseudo-thumb works with its other digits to grip bamboo. This species-level fact does not describe an individual animal's current condition.",
+      "source_ref": "source_panda_base_diet"
+    },
+    {
+      "card_id": "card_feeding_time",
+      "question_patterns_zh": [
+        "大熊猫为什么花那么长时间进食",
+        "大熊猫为什么吃很久",
+        "大熊猫为什么要大量进食"
+      ],
+      "question_patterns_en": [
+        "why do pandas spend so much time eating",
+        "why do giant pandas eat for so long",
+        "why do pandas eat so much bamboo"
+      ],
+      "answer_zh": "大熊猫对竹类的消化利用率较低，通过大量进食获取所需能量，因此花较多时间进食；不能据此判断某只熊猫是否健康。",
+      "answer_en": "Giant pandas digest bamboo inefficiently and eat large amounts to obtain enough energy, so feeding takes considerable time. This does not establish an individual panda's health.",
+      "source_ref": "source_panda_base_diet"
     }
   ]
 }

@@ -52,15 +52,33 @@ def triage_incident(request: IncidentRequest) -> SkillResponse:
         )
     selected = min(matches, key=lambda rule: rule.priority)
     urgent = selected.priority in {"P0", "P1"}
+    safety_signals = list(
+        dict.fromkeys(
+            rule.rule_id for rule in matches if rule.priority in {"P0", "P1"}
+        )
+    )
     priority = selected.priority if urgent or request.is_ongoing is not False else "P3"
     return _response(
         selected.category, priority, SkillStatus.ESCALATED if urgent else SkillStatus.OK,
         selected.role, missing, source_refs=resource.source_refs,
         rule_refs=list(dict.fromkeys(rule.rule_id for rule in matches)), version=resource.version,
+        safety_signals=safety_signals,
     )
 
 
-def _response(category, priority, status, role, missing, *, source_refs=None, rule_refs=None, version=None, warnings=None):
+def _response(
+    category,
+    priority,
+    status,
+    role,
+    missing,
+    *,
+    source_refs=None,
+    rule_refs=None,
+    version=None,
+    warnings=None,
+    safety_signals=None,
+):
     actions = [f"请由{role}人工核实情况。"]
     if status is SkillStatus.ESCALATED:
         actions.insert(0, "暂停普通游览安排，立即寻求现场工作人员协助。")
@@ -74,7 +92,7 @@ def _response(category, priority, status, role, missing, *, source_refs=None, ru
             "prohibited_actions": ["不得将草稿视为已派单或已通知。", "不得根据本结果作出诊断、治疗或事件已解决的判断。", "不要提交姓名、证件号、手机号等个人信息。"],
             "reply_template": f"此处仅生成处置建议，请联系{role}确认接手；尚未通知任何人员。",
             "dispatch_status": "draft", "sent": False, "missing_fields": missing,
-            "rule_version": version,
+            "rule_version": version, "safety_signals": safety_signals or [],
         },
         source_refs=source_refs, rule_refs=rule_refs,
         warnings=["仅使用演示分诊矩阵，不代表园区正式流程；未发送工单。", *(warnings or [])],

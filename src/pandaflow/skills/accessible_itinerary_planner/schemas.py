@@ -1,8 +1,14 @@
 """Input model for the deterministic itinerary planner."""
 
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints
+
+
+NodeId = Annotated[
+    str,
+    StringConstraints(pattern=r"^[A-Za-z][A-Za-z0-9_-]{0,99}$"),
+]
 
 
 class ItineraryRequest(BaseModel):
@@ -10,8 +16,8 @@ class ItineraryRequest(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    entry_node: str
+    entry_node: NodeId
     available_minutes: int = Field(ge=1, le=480)
-    must_see: list[str] = Field(default_factory=list)
+    must_see: list[NodeId] = Field(default_factory=list, max_length=20)
     mobility_need: Literal["standard", "step_free"] = "standard"
-    closed_nodes: list[str] = Field(default_factory=list)
+    closed_nodes: list[NodeId] = Field(default_factory=list, max_length=20)

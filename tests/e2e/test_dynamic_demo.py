@@ -1,4 +1,8 @@
-from datetime import date
+from datetime import date, datetime
+from itertools import permutations
+from zoneinfo import ZoneInfo
+
+import pytest
 
 from pandaflow.integrations.open_meteo import OpenMeteoError, WeatherSnapshot
 from pandaflow.shared.contracts import SkillStatus
@@ -14,7 +18,7 @@ def _live_snapshot(*, temperature: float = 33) -> WeatherSnapshot:
         precipitation_mm=0.2,
         weather_code=3,
         wind_speed_kmh=8.4,
-        observed_at="2026-09-08T12:00",
+        observed_at=datetime.now(ZoneInfo("Asia/Shanghai")),
         timezone="Asia/Shanghai",
         location_label="Chengdu Panda Base demo weather point",
         source="open_meteo",
@@ -103,6 +107,57 @@ def test_high_heat_replans_and_removes_the_outdoor_node():
     assert result.data["risk"]["data"]["replan_required"] is True
 
 
+def test_high_heat_replan_never_reintroduces_an_active_outdoor_node():
+    result = run_demo(
+        DemoRequest(
+            visit_date=date(2026, 7, 4),
+            temperature_celsius=33,
+            crowd_level="high",
+            must_see=["panda_nursery", "south_gate"],
+        )
+    )
+
+    final_nodes = {
+        step["node_id"]
+        for step in result.data["final_itinerary"]["data"]["itinerary"]
+    }
+    assert final_nodes.isdisjoint(result.data["risk"]["data"]["active_avoid_nodes"])
+
+
+def test_bounded_high_heat_preference_sweep_has_no_unsafe_ok_route():
+    candidate_nodes = [
+        "panda_nursery",
+        "science_hall",
+        "bamboo_grove",
+        "hillside_trail",
+        "lake_pavilion",
+        "south_gate",
+    ]
+    violations = []
+
+    for length in range(1, 4):
+        for must_see in permutations(candidate_nodes, length):
+            result = run_demo(
+                DemoRequest(
+                    visit_date=date(2026, 7, 4),
+                    temperature_celsius=33,
+                    crowd_level="high",
+                    must_see=list(must_see),
+                )
+            )
+            if result.status is not SkillStatus.OK:
+                continue
+            final_nodes = {
+                step["node_id"]
+                for step in result.data["final_itinerary"]["data"]["itinerary"]
+            }
+            active_avoid_nodes = set(result.data["risk"]["data"]["active_avoid_nodes"])
+            if residual := sorted(final_nodes & active_avoid_nodes):
+                violations.append({"must_see": must_see, "residual": residual})
+
+    assert violations == []
+
+
 def test_urgent_incident_stops_before_any_ordinary_planning_and_is_reviewed():
     def unexpected_weather() -> WeatherSnapshot:
         raise AssertionError("urgent incidents must stop before weather resolution")
@@ -121,6 +176,38 @@ def test_urgent_incident_stops_before_any_ordinary_planning_and_is_reviewed():
     assert result.data["review"]["data"]["event_counts"] == {"missing_person": 1}
     assert len(result.data["execution_records"]) == 1
     assert "Continue with the final itinerary" not in str(result.next_actions)
+
+
+@pytest.mark.parametrize(
+    "description",
+    [
+        "有人晕倒了，顺便问一下门票怎么退",
+        "孩子找不到了，想问门票退款",
+        "a visitor collapsed and needs a refund",
+    ],
+)
+def test_mixed_safety_incident_stops_before_weather_or_route(description):
+    def unexpected_weather() -> WeatherSnapshot:
+        raise AssertionError("mixed safety incidents must stop before weather resolution")
+
+    result = run_demo(
+        DemoRequest(
+            visit_date=date.today(),
+            weather_mode="live_current",
+            crowd_level="low",
+            incident=IncidentRequest(
+                description=description,
+                area="north_gate",
+                is_ongoing=True,
+            ),
+        ),
+        weather_fetcher=unexpected_weather,
+    )
+
+    assert result.status is SkillStatus.ESCALATED
+    assert result.data["stopped_after"] == "incident-triage-dispatch"
+    assert "final_itinerary" not in result.data
+    assert result.data["response"]["data"]["safety_signals"]
 
 
 def test_six_skills_are_represented_with_a_review_of_actual_calls():
@@ -163,13 +250,18 @@ def test_failed_route_preserves_policy_evidence_and_stop_status():
     assert result.data["review"]["data"]["status_counts"] == {"ok": 1, "rejected": 1}
 
 
-def test_unsupported_knowledge_stops_and_is_not_reported_as_success():
+def test_unsupported_optional_knowledge_preserves_the_validated_route():
     result = run_demo(DemoRequest(
         visit_date=date(2026, 7, 4), temperature_celsius=26, crowd_level="low",
         knowledge=KnowledgeRequest(question="某只熊猫现在在哪里？", language="zh"),
     ))
     assert result.status is SkillStatus.NEEDS_INPUT
-    assert result.data["stopped_after"] == "panda-knowledge-guard"
+    assert "stopped_after" not in result.data
+    assert result.data["initial_itinerary"]
+    assert result.data["risk"]
+    assert result.data["final_itinerary"]
+    assert result.data["knowledge"]["status"] == "needs_input"
+    assert result.data["knowledge"]["data"]["answer"] is None
     assert result.data["review"]["data"]["total_calls"] == 4
 
 

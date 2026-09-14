@@ -1,0 +1,10 @@
+{
+  "visit_date": "2026-09-14",
+  "entry_slot": "morning",
+  "reservation_status": "confirmed",
+  "document_type": "passport",
+  "language": "zh",
+  "accessibility_needs": [
+    "wheelchair"
+  ]
+}

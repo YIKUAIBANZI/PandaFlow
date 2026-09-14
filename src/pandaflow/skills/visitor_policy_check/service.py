@@ -46,6 +46,14 @@ def evaluate_policy(request: VisitorPolicyRequest) -> SkillResponse:
             next_actions=["Provide the intended visit date."],
         )
 
+    if request.entry_slot is None:
+        return _response(
+            status=SkillStatus.NEEDS_INPUT,
+            data={"eligible": None, "missing_fields": ["entry_slot"]},
+            rule_refs=[reservation_rule],
+            next_actions=["Provide the intended entry slot."],
+        )
+
     if request.reservation_status != "confirmed":
         action = (
             "Complete or confirm the booking before visiting."

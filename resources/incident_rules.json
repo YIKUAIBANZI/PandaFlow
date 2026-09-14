@@ -5,8 +5,8 @@
   "rules": [
     {"rule_id": "incident_critical_medical", "category": "medical", "priority": "P0", "keywords": ["昏迷", "失去意识", "无意识", "呼吸困难", "unconscious", "not breathing"], "role": "现场安全与医疗协助岗位"},
     {"rule_id": "incident_critical_order", "category": "order", "priority": "P0", "keywords": ["踩踏", "持刀", "火灾", "stampede", "weapon"], "role": "现场安全岗位"},
-    {"rule_id": "incident_medical", "category": "medical", "priority": "P1", "keywords": ["医疗", "身体不适", "受伤", "摔倒", "头晕", "中暑", "疼痛", "medical", "injured", "dizzy", "fainted"], "role": "现场医疗协助岗位"},
-    {"rule_id": "incident_missing_person", "category": "missing_person", "priority": "P1", "keywords": ["走失", "走散", "孩子不见", "找不到孩子", "同伴失踪", "missing child", "missing person", "lost child", "lost companion"], "role": "现场安全与游客服务岗位"},
+    {"rule_id": "incident_medical", "category": "medical", "priority": "P1", "keywords": ["医疗", "身体不适", "受伤", "摔倒", "晕倒", "头晕", "中暑", "疼痛", "medical", "injured", "dizzy", "fainted", "collapsed", "passed out"], "role": "现场医疗协助岗位"},
+    {"rule_id": "incident_missing_person", "category": "missing_person", "priority": "P1", "keywords": ["走失", "走散", "孩子不见", "孩子找不到", "小孩找不到", "儿童找不到", "找不到孩子", "同伴失踪", "missing child", "missing person", "lost child", "lost companion", "child cannot be found", "cannot find my child"], "role": "现场安全与游客服务岗位"},
     {"rule_id": "incident_uncertain_danger", "category": "unknown", "priority": "P1", "keywords": ["救命", "出事", "危险", "help me", "emergency"], "role": "现场安全岗位"},
     {"rule_id": "incident_lost_property", "category": "lost_property", "priority": "P2", "keywords": ["遗失", "失物", "钱包丢", "手机丢", "lost phone", "lost wallet", "lost property"], "role": "失物招领岗位"},
     {"rule_id": "incident_ticketing", "category": "ticketing", "priority": "P2", "keywords": ["票务", "预约", "门票", "退款", "ticket", "reservation", "refund"], "role": "票务客服岗位"},

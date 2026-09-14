@@ -110,9 +110,10 @@ def run_demo(
 
     final_itinerary = initial_itinerary
     replanned = bool(risk.data["replan_required"])
+    active_avoid_nodes = risk.data.get("active_avoid_nodes", risk.data["avoid_nodes"])
     if replanned:
         final_itinerary = plan_itinerary(
-            itinerary_request.model_copy(update={"closed_nodes": risk.data["avoid_nodes"]})
+            itinerary_request.model_copy(update={"closed_nodes": active_avoid_nodes})
         )
         responses.append(final_itinerary)
         if final_itinerary.status is not SkillStatus.OK:
@@ -125,11 +126,37 @@ def run_demo(
                 extra_warnings=weather.warnings,
             )
 
+    final_route_nodes = {
+        step["node_id"] for step in final_itinerary.data["itinerary"]
+    }
+    violating_nodes = sorted(final_route_nodes & set(active_avoid_nodes))
+    if violating_nodes:
+        return _finish(
+            responses,
+            status=SkillStatus.REJECTED,
+            data={
+                **extra_data,
+                "weather": snapshot.model_dump(mode="json"),
+                "policy": _as_data(policy),
+                "initial_itinerary": _as_data(initial_itinerary),
+                "risk": _as_data(risk),
+                "replanned": replanned,
+                "stopped_after": "final-route-constraint-check",
+                "violating_nodes": violating_nodes,
+            },
+            warnings=[
+                "Final route failed an active hard-constraint check.",
+                *weather.warnings,
+            ],
+            next_actions=["Ask staff for a safe alternative route."],
+            extra_source_refs=weather.source_refs,
+        )
+
     if request.knowledge is not None:
         knowledge = answer_question(request.knowledge)
         responses.append(knowledge)
         extra_data["knowledge"] = _as_data(knowledge)
-        if knowledge.status is not SkillStatus.OK:
+        if knowledge.status not in {SkillStatus.OK, SkillStatus.NEEDS_INPUT}:
             return _stopped(
                 knowledge,
                 "Knowledge request did not produce a supported answer.",
@@ -139,8 +166,12 @@ def run_demo(
                 extra_warnings=weather.warnings,
             )
 
+    completion_status = weather.status
+    if request.knowledge is not None and knowledge.status is SkillStatus.NEEDS_INPUT:
+        completion_status = SkillStatus.NEEDS_INPUT
+
     return _finish(
-        responses, status=weather.status,
+        responses, status=completion_status,
         data={
             **extra_data,
             "weather": snapshot.model_dump(mode="json"),

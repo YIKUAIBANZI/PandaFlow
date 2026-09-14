@@ -55,8 +55,10 @@ def plan_itinerary(request: ItineraryRequest) -> SkillResponse:
     current_node = request.entry_node
     total_minutes = 0
     omitted_preferences: list[str] = []
+    fulfilled_preferences: list[str] = []
+    preferences = list(dict.fromkeys(request.must_see))
 
-    for preference in request.must_see:
+    for preference in preferences:
         if preference not in allowed_nodes:
             omitted_preferences.append(preference)
             continue
@@ -69,6 +71,8 @@ def plan_itinerary(request: ItineraryRequest) -> SkillResponse:
         if total_minutes + walking_minutes + dwell_minutes > request.available_minutes:
             omitted_preferences.append(preference)
             continue
+        if len(path) == 1:
+            itinerary[-1]["dwell_minutes"] = dwell_minutes
         for node in path[1:]:
             edge_route = _shortest_path(graph, current_node, node, allowed_nodes)
             assert edge_route is not None
@@ -82,8 +86,9 @@ def plan_itinerary(request: ItineraryRequest) -> SkillResponse:
             )
             current_node = node
         total_minutes += dwell_minutes
+        fulfilled_preferences.append(preference)
 
-    if not request.must_see or len(omitted_preferences) == len(request.must_see):
+    if not preferences or not fulfilled_preferences:
         return _rejected("No requested stop has a safe route within the current constraints.")
 
     rest_stops = [step["node_id"] for step in itinerary if nodes[step["node_id"]]["rest_stop"]]
@@ -98,6 +103,7 @@ def plan_itinerary(request: ItineraryRequest) -> SkillResponse:
             "total_minutes": total_minutes,
             "rest_stops": rest_stops,
             "omitted_preferences": omitted_preferences,
+            "fulfilled_preferences": fulfilled_preferences,
         },
         source_refs=[SOURCE_REF],
         rule_refs=RULE_REFS,
@@ -111,7 +117,13 @@ def _rejected(reason: str) -> SkillResponse:
     return SkillResponse.create(
         skill=SKILL_NAME,
         status=SkillStatus.REJECTED,
-        data={"itinerary": [], "total_minutes": 0, "rest_stops": [], "omitted_preferences": []},
+        data={
+            "itinerary": [],
+            "total_minutes": 0,
+            "rest_stops": [],
+            "omitted_preferences": [],
+            "fulfilled_preferences": [],
+        },
         source_refs=[SOURCE_REF],
         rule_refs=RULE_REFS,
         warnings=[reason],

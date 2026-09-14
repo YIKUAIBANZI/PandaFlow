@@ -1,0 +1,11 @@
+{
+  "http_status": 422,
+  "body": {
+    "detail": [
+      {
+        "type": "literal_error",
+        "msg": "请求字段不符合输入约束，请参阅接口文档。"
+      }
+    ]
+  }
+}

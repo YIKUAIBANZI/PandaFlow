@@ -6,6 +6,10 @@
     "longitude": 104.15,
     "demo_data": true
   },
+  "freshness": {
+    "max_observation_age_minutes": 30,
+    "max_future_skew_minutes": 5
+  },
   "fallback": {
     "temperature_celsius": 33,
     "apparent_temperature_celsius": 36,

@@ -1,0 +1,28 @@
+{
+  "http_status": 200,
+  "body": {
+    "status": "ok",
+    "request_id": "req_0686da22b81a4ac39ad49d0cefa0b65a",
+    "skill": "visitor-policy-check",
+    "data": {
+      "eligible": true,
+      "visit_date": "2026-09-14",
+      "entry_slot": "morning"
+    },
+    "source_refs": [
+      "source_base_visitor_service"
+    ],
+    "rule_refs": [
+      "rule_reservation_required",
+      "rule_document_check"
+    ],
+    "warnings": [
+      "This prototype uses demo rules and does not guarantee admission."
+    ],
+    "next_actions": [
+      "Bring the selected document and follow on-site guidance."
+    ],
+    "demo_data": true,
+    "generated_at": "2026-09-14T05:00:20.291185Z"
+  }
+}

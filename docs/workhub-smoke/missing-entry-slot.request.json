@@ -1,0 +1,9 @@
+{
+  "visit_date": "2026-09-14",
+  "reservation_status": "confirmed",
+  "document_type": "passport",
+  "language": "zh",
+  "accessibility_needs": [
+    "wheelchair"
+  ]
+}

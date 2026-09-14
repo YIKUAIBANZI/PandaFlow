@@ -5,7 +5,7 @@ description: Validate only the minimum non-identifying pre-visit conditions for 
 
 # Visitor Policy Check
 
-Use this Skill when a visitor needs a pre-visit check for date, time slot, reservation state, document type, language, or accessibility needs.
+Use this Skill for the fixed demo's required date, time slot, reservation state, and document-type completeness check. `language` and `accessibility_needs` are accepted as bounded context but do not currently change the policy decision.
 
 ## Boundaries
 

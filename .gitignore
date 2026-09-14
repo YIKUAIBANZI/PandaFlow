@@ -1,5 +1,8 @@
 .worktrees/
+.playwright-cli/
 __pycache__/
 .pytest_cache/
 .venv/
+dist/
 .DS_Store
+tmp/pdfs/

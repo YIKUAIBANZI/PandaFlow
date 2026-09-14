@@ -1,0 +1,103 @@
+{
+  "base_url": "https://pandeflow.yikuaibanz.cn",
+  "verified_at": "2026-09-14T06:05:13.155376+00:00",
+  "checks": [
+    {
+      "path": "/ready",
+      "http_status": 200
+    },
+    {
+      "path": "/health",
+      "http_status": 200
+    },
+    {
+      "path": "/demo",
+      "http_status": 200
+    },
+    {
+      "path": "/openapi.json",
+      "http_status": 200
+    },
+    {
+      "case": "normal",
+      "http_status": 200,
+      "status": "ok"
+    },
+    {
+      "case": "missing-entry-slot",
+      "http_status": 200,
+      "status": "needs_input"
+    },
+    {
+      "case": "invalid-entry-slot",
+      "http_status": 422,
+      "status": null
+    },
+    {
+      "scenario": "normal_all_skills",
+      "http_status": 200,
+      "status": "ok",
+      "weather": {
+        "temperature_celsius": 26.0,
+        "apparent_temperature_celsius": 26.0,
+        "precipitation_mm": 0.0,
+        "weather_code": 1,
+        "wind_speed_kmh": 8.0,
+        "observed_at": null,
+        "fetched_at": null,
+        "timezone": "Asia/Shanghai",
+        "location_label": "Chengdu Panda Base demo weather point",
+        "source": "provided_synthetic",
+        "attribution": "PandaFlow synthetic demo weather",
+        "attribution_url": "https://example.invalid/pandaflow/demo-weather",
+        "demo_data": true
+      }
+    },
+    {
+      "scenario": "heat_replan",
+      "http_status": 200,
+      "status": "ok",
+      "weather": {
+        "temperature_celsius": 33.0,
+        "apparent_temperature_celsius": 33.0,
+        "precipitation_mm": 0.0,
+        "weather_code": 1,
+        "wind_speed_kmh": 8.0,
+        "observed_at": null,
+        "fetched_at": null,
+        "timezone": "Asia/Shanghai",
+        "location_label": "Chengdu Panda Base demo weather point",
+        "source": "provided_synthetic",
+        "attribution": "PandaFlow synthetic demo weather",
+        "attribution_url": "https://example.invalid/pandaflow/demo-weather",
+        "demo_data": true
+      }
+    },
+    {
+      "scenario": "human_escalation",
+      "http_status": 200,
+      "status": "escalated",
+      "weather": null
+    },
+    {
+      "scenario": "live_current_weather",
+      "http_status": 200,
+      "status": "ok",
+      "weather": {
+        "temperature_celsius": 24.6,
+        "apparent_temperature_celsius": 25.3,
+        "precipitation_mm": 0.0,
+        "weather_code": 3,
+        "wind_speed_kmh": 9.6,
+        "observed_at": "2026-09-14T14:00:00+08:00",
+        "fetched_at": "2026-09-14T14:05:14.258853+08:00",
+        "timezone": "Asia/Shanghai",
+        "location_label": "Chengdu Panda Base demo weather point",
+        "source": "open_meteo",
+        "attribution": "Weather data by Open-Meteo.com",
+        "attribution_url": "https://open-meteo.com/",
+        "demo_data": false
+      }
+    }
+  ]
+}

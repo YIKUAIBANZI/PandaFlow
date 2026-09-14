@@ -10,14 +10,29 @@ MEDICAL_TERMS = ("生病", "诊断", "治疗", "disease", "diagnose", "treatment
 
 def answer_question(request: KnowledgeRequest) -> SkillResponse:
     cards = load_json_resource("knowledge_cards.json")
-    question = request.question.lower()
+    question = request.question.casefold()
     if any(term in question for term in MEDICAL_TERMS):
         return _response(
             cards, SkillStatus.REJECTED, None, [],
             "Medical or animal-health questions require qualified human staff.",
         )
+    if any(
+        pattern.casefold() in question
+        for pattern in cards["unsupported_live_patterns"]
+    ):
+        return _response(
+            cards,
+            SkillStatus.NEEDS_INPUT,
+            None,
+            [],
+            "Current animal identity, location, or status is not supported by registered evidence.",
+        )
     for card in cards["cards"]:
-        if any(keyword.lower() in question for keyword in card["keywords"]):
+        patterns = [
+            *card["question_patterns_zh"],
+            *card["question_patterns_en"],
+        ]
+        if any(pattern.casefold() in question for pattern in patterns):
             answer = card["answer_zh"] if request.language == "zh" else card["answer_en"]
             return _response(cards, SkillStatus.OK, answer, [card["source_ref"]], None)
     return _response(
